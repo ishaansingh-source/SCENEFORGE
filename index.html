@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SCENEFORGE — Cinematic Story Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,wght@0,700;0,900;1,400;1,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════
+   ROOT VARIABLES — Clean, Bold, Colorful
+═══════════════════════════════════════════════ */
+:root {
+  --white:     #ffffff;
+  --off-white: #fafaf8;
+  --cream:     #f5f0e8;
+  --paper:     #f9f6f0;
+  --light:     #f0ede8;
+
+  --ink:       #1a1410;
+  --ink2:      #2e2820;
+  --ink3:      #4a4238;
+  --ink4:      #6b6058;
+  --ink5:      #968878;
+
+  --red:       #e63030;
+  --red2:      #ff4d4d;
+  --red-light: #fff0f0;
+  --red-mid:   #ffd6d6;
+
+  --blue:      #1a4fd6;
+  --blue2:     #2563ff;
+  --blue-light:#eef2ff;
+  --blue-mid:  #c7d4ff;
+
+  --gold:      #d4820a;
+  --gold2:     #f0a500;
+  --gold-light:#fff8e6;
+  --gold-mid:  #fde68a;
+
+  --green:     #127a4a;
+  --green2:    #16a864;
+  --green-light:#e8f8f0;
+  --green-mid: #a7f3d0;
+
+  --purple:    #6b21d4;
+  --purple2:   #8b5cf6;
+  --purple-light:#f3eeff;
+  --purple-mid:#d8b4fe;
+
+  --coral:     #e84c3d;
+  --teal:      #0d9488;
+  --orange:    #ea580c;
+
+  --border:    #e0d8cc;
+  --border2:   #ccc4b8;
+  --shadow:    rgba(26,20,16,0.08);
+  --shadow2:   rgba(26,20,16,0.15);
+}
+
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{
+  background:var(--white);
+  color:var(--ink);
+  font-family:'DM Sans',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+::selection{background:#fde68a;color:var(--ink);}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-thumb{background:#d0c8b8;border-radius:3px;}
+
+/* ═══════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════ */
+.sf-header{
+  height:80px;padding:0 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--ink);
+  position:sticky;top:0;z-index:500;
+  border-bottom:4px solid var(--gold2);
+}
+.hdr-left{display:flex;align-items:center;gap:16px;}
+.hdr-logo{
+  font-family:'Playfair Display',serif;
+  font-size:28px;font-weight:900;letter-spacing:2px;
+  color:var(--gold2);
+}
+.hdr-sep{width:2px;height:32px;background:rgba(255,255,255,0.15);}
+.hdr-tagline{
+  font-family:'Space Mono',monospace;font-size:11px;
+  color:rgba(255,255,255,0.5);letter-spacing:2px;
+}
+.hdr-center{display:flex;gap:4px;}
+.hdr-nav-btn{
+  padding:8px 20px;border-radius:6px;cursor:pointer;
+  border:2px solid transparent;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;
+  color:rgba(255,255,255,0.6);transition:all .2s;background:transparent;
+}
+.hdr-nav-btn:hover{color:#fff;border-color:rgba(255,255,255,0.2);}
+.hdr-nav-btn.active{color:var(--gold2);border-color:var(--gold2);background:rgba(240,165,0,0.1);}
+.hdr-right{display:flex;align-items:center;gap:10px;}
+.hdr-badge{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 18px;border-radius:20px;
+  background:var(--green2);
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;font-weight:700;color:#fff;
+}
+.hdr-dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* ═══════════════════════════════════════════════
+   HERO BANNER
+═══════════════════════════════════════════════ */
+.sf-hero{
+  background:var(--ink);
+  padding:64px 48px 56px;
+  position:relative;overflow:hidden;
+}
+.sf-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 50%, rgba(212,130,10,0.15), transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(26,79,214,0.1), transparent 50%);
+}
+.hero-inner{position:relative;z-index:1;max-width:900px;}
+.hero-kicker{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;font-weight:700;
+  color:var(--gold2);margin-bottom:24px;
+  background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.3);
+  padding:6px 16px;border-radius:20px;
+}
+.hero-h1{
+  font-family:'Fraunces',serif;font-size:clamp(56px,8vw,110px);
+  font-weight:900;line-height:0.9;letter-spacing:-2px;
+  color:#fff;margin-bottom:20px;
+}
+.hero-h1 .word-cinematic{color:var(--gold2);}
+.hero-h1 .word-story{color:var(--blue2);}
+.hero-desc{
+  font-family:'DM Sans',sans-serif;font-size:20px;font-weight:400;
+  color:rgba(255,255,255,0.65);max-width:600px;line-height:1.7;margin-bottom:36px;
+}
+.hero-chips{display:flex;gap:12px;flex-wrap:wrap;}
+.hero-chip{
+  padding:8px 18px;border-radius:6px;
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;font-weight:700;
+  border:2px solid;
+}
+.hc1{border-color:var(--gold2);color:var(--gold2);}
+.hc2{border-color:var(--blue2);color:var(--blue2);}
+.hc3{border-color:var(--green2);color:var(--green2);}
+.hc4{border-color:var(--purple2);color:var(--purple2);}
+
+/* ═══════════════════════════════════════════════
+   STATUS BAR
+═══════════════════════════════════════════════ */
+.status-bar{
+  display:none;align-items:center;gap:16px;
+  padding:12px 48px;
+  background:var(--blue-light);
+  border-bottom:3px solid var(--blue2);
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--blue);font-weight:700;
+}
+.status-bar.visible{display:flex;}
+.status-dot{width:10px;height:10px;border-radius:50%;background:var(--blue2);animation:pulse 1s infinite;}
+.status-track{flex:1;height:6px;background:var(--blue-mid);border-radius:3px;overflow:hidden;}
+.status-fill{height:100%;width:0;background:linear-gradient(90deg,var(--blue2),var(--purple2));transition:width .4s ease;border-radius:3px;}
+.status-pct{color:var(--blue);min-width:40px;text-align:right;}
+
+/* ═══════════════════════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════════════════════ */
+.sf-main{
+  display:grid;grid-template-columns:480px 1fr;
+  flex:1;min-height:0;
+}
+@media(max-width:1100px){.sf-main{grid-template-columns:1fr;}}
+
+/* ═══════════════════════════════════════════════
+   LEFT PANEL — Control Studio
+═══════════════════════════════════════════════ */
+.sf-panel{
+  background:var(--paper);
+  border-right:3px solid var(--border);
+  padding:32px 28px 64px;
+  overflow-y:auto;
+  max-height:calc(100vh - 80px);
+  position:sticky;top:80px;
+  scrollbar-width:thin;scrollbar-color:#d0c8b8 transparent;
+}
+@media(max-width:1100px){.sf-panel{max-height:none;position:static;}}
+
+/* Section */
+.ps{margin-bottom:32px;}
+.ps-head{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:16px;padding-bottom:12px;
+  border-bottom:2px solid var(--border);
+}
+.ps-icon{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;font-weight:700;
+}
+.psi-red   {background:var(--red-light);color:var(--red);}
+.psi-blue  {background:var(--blue-light);color:var(--blue);}
+.psi-gold  {background:var(--gold-light);color:var(--gold);}
+.psi-green {background:var(--green-light);color:var(--green);}
+.psi-purple{background:var(--purple-light);color:var(--purple);}
+
+.ps-title{
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;
+  color:var(--ink);flex:1;text-transform:uppercase;
+}
+.ps-count{
+  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--red);background:var(--red-light);
+  padding:3px 10px;border-radius:12px;border:1px solid var(--red-mid);
+}
+
+/* Divider */
+.pdiv{height:2px;background:var(--border);margin:8px 0 24px;border-radius:1px;}
+
+/* ── CHARACTER ROWS ── */
+.char-row{
+  display:grid;
+  grid-template-columns:36px 1fr 90px 90px auto;
+  gap:8px;align-items:center;
+  margin-bottom:10px;
+  animation:slideIn .25s ease;
+}
+@keyframes slideIn{from{opacity:0;transform:translateX(-12px);}to{opacity:1;transform:translateX(0);}}
+
+.char-num{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Mono',monospace;font-size:13px;font-weight:700;
+  border:2px solid;flex-shrink:0;
+}
+.cn0{background:#fff8e6;border-color:var(--gold);color:var(--gold);}
+.cn1{background:var(--red-light);border-color:var(--red);color:var(--red);}
+.cn2{background:var(--blue-light);border-color:var(--blue);color:var(--blue);}
+.cn3{background:var(--purple-light);border-color:var(--purple);color:var(--purple);}
+.cn4{background:var(--green-light);border-color:var(--green);color:var(--green);}
+
+.char-in{
+  background:var(--white);border:2px solid var(--border);
+  color:var(--ink);padding:9px 14px;border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;
+  outline:none;transition:all .2s;width:100%;
+}
+.char-in:focus{border-color:var(--blue2);box-shadow:0 0 0 3px var(--blue-light);}
+.char-in::placeholder{color:var(--ink5);}
+
+.char-sel{
+  background:var(--white);border:2px solid var(--border);
+  color:var(--ink3);padding:9px 8px;border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
+  outline:none;cursor:pointer;transition:all .2s;width:100%;
+}
+.char-sel:focus{border-color:var(--blue2);}
+.char-sel option{background:var(--white);}
+
+.char-del{
+  width:36px;height:36px;flex-shrink:0;border-radius:8px;
+  background:var(--red-light);border:2px solid var(--red-mid);
+  color:var(--red);cursor:pointer;font-size:18px;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.char-del:hover{background:var(--red);color:#fff;border-color:var(--red);}
+.char-spacer{width:36px;flex-shrink:0;}
+
+.char-label{
+  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;
+  color:var(--ink5);letter-spacing:1px;text-transform:uppercase;
+  margin-bottom:4px;
+}
+
+.char-headers{
+  display:grid;
+  grid-template-columns:36px 1fr 90px 90px 36px;
+  gap:8px;align-items:center;
+  margin-bottom:6px;
+}
+.char-headers span{
+  font-family:'Space Mono',monospace;font-size:9px;font-weight:700;
+  color:var(--ink5);letter-spacing:2px;text-transform:uppercase;
+}
+
+.add-char-btn{
+  width:100%;padding:11px;margin-top:8px;cursor:pointer;
+  border:2px dashed var(--blue-mid);
+  background:var(--blue-light);
+  color:var(--blue);
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;
+  border-radius:10px;transition:all .2s;
+}
+.add-char-btn:hover{border-color:var(--blue2);background:rgba(37,99,255,0.1);color:var(--blue2);}
+
+/* ── CHIPS ── */
+.chip-grid{display:flex;flex-wrap:wrap;gap:6px;}
+.chip-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;}
+.chip-scroll::-webkit-scrollbar{display:none;}
+
+.chip{
+  padding:7px 14px;border-radius:8px;cursor:pointer;
+  border:2px solid var(--border);background:var(--white);
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
+  color:var(--ink4);transition:all .18s;white-space:nowrap;
+}
+.chip:hover{border-color:var(--blue2);color:var(--blue);background:var(--blue-light);}
+
+/* Selected chip colors */
+.chip.sa{background:var(--gold-light);border-color:var(--gold);color:var(--gold);}
+.chip.sb{background:var(--red-light);border-color:var(--red);color:var(--red);}
+.chip.sc{background:var(--blue-light);border-color:var(--blue);color:var(--blue);}
+.chip.sd{background:var(--purple-light);border-color:var(--purple);color:var(--purple);}
+.chip.se{background:var(--green-light);border-color:var(--green);color:var(--green);}
+
+/* Genre cards */
+.genre-card{
+  flex-shrink:0;padding:12px 18px;border-radius:10px;
+  border:2px solid var(--border);background:var(--white);
+  cursor:pointer;transition:all .2s;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;
+  color:var(--ink3);white-space:nowrap;text-align:center;
+}
+.genre-card .gc-icon{display:block;font-size:22px;margin-bottom:6px;}
+.genre-card:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-light);}
+.genre-card.gsel{background:var(--gold-light);border-color:var(--gold);color:var(--gold);}
+
+/* ── SLIDERS ── */
+.slider-block{margin-bottom:20px;}
+.slider-lbl{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.slider-name{
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;
+  color:var(--ink2);
+}
+.slider-val{
+  font-family:'Space Mono',monospace;font-size:13px;font-weight:700;
+  color:var(--blue);background:var(--blue-light);
+  padding:3px 10px;border-radius:6px;border:1px solid var(--blue-mid);
+}
+input[type=range]{
+  width:100%;-webkit-appearance:none;height:6px;border-radius:3px;
+  background:linear-gradient(90deg, var(--blue2) var(--val,50%), var(--border) var(--val,50%));
+  outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:18px;height:18px;
+  border-radius:50%;background:var(--blue2);
+  border:3px solid var(--white);cursor:pointer;
+  box-shadow:0 2px 8px rgba(37,99,255,0.4);
+  transition:box-shadow .15s;
+}
+input[type=range]:hover::-webkit-slider-thumb{box-shadow:0 2px 16px rgba(37,99,255,0.6);}
+
+/* ── TEXTAREA ── */
+.sf-ta{
+  width:100%;background:var(--white);
+  border:2px solid var(--border);color:var(--ink);
+  padding:14px 16px;border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-size:15px;
+  outline:none;resize:vertical;min-height:100px;line-height:1.7;
+  transition:all .2s;
+}
+.sf-ta:focus{border-color:var(--blue2);box-shadow:0 0 0 3px var(--blue-light);}
+.sf-ta::placeholder{color:var(--ink5);}
+
+/* ── SELECT ── */
+.sf-sel{
+  width:100%;background:var(--white);border:2px solid var(--border);
+  color:var(--ink);padding:11px 14px;border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
+  outline:none;cursor:pointer;transition:all .2s;
+}
+.sf-sel:focus{border-color:var(--blue2);}
+.sf-sel option{background:var(--white);}
+
+/* ── FORGE BUTTONS ── */
+.btn-forge{
+  width:100%;padding:20px 24px;border:none;cursor:pointer;border-radius:12px;
+  font-family:'Fraunces',serif;font-size:22px;font-weight:900;letter-spacing:1px;
+  color:var(--white);
+  background:linear-gradient(135deg,var(--red) 0%,var(--red2) 50%,var(--coral) 100%);
+  box-shadow:0 6px 32px rgba(230,48,48,0.3);
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.btn-forge::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent,rgba(255,255,255,0.15),transparent);
+  transform:translateX(-100%);transition:transform .5s;
+}
+.btn-forge:hover::after{transform:translateX(100%);}
+.btn-forge:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 12px 40px rgba(230,48,48,0.4);}
+.btn-forge:active:not(:disabled){transform:translateY(0);}
+.btn-forge:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+.btn-illuminate{
+  width:100%;padding:16px 24px;margin-top:10px;border-radius:12px;cursor:pointer;
+  font-family:'Fraunces',serif;font-size:18px;font-weight:700;
+  background:var(--white);border:3px solid var(--purple);color:var(--purple);
+  transition:all .22s;
+}
+.btn-illuminate:hover:not(:disabled){background:var(--purple);color:#fff;box-shadow:0 8px 32px rgba(107,33,212,0.3);}
+.btn-illuminate:disabled{opacity:.3;cursor:not-allowed;}
+
+.tip{
+  font-family:'DM Sans',sans-serif;font-size:12px;
+  color:var(--ink5);margin-top:8px;text-align:center;
+}
+
+/* ═══════════════════════════════════════════════
+   RIGHT OUTPUT PANEL
+═══════════════════════════════════════════════ */
+.sf-output{
+  background:var(--white);
+  padding:60px 72px;
+  overflow-y:auto;
+  min-height:calc(100vh - 80px);
+}
+@media(max-width:1100px){.sf-output{padding:36px 24px;}}
+
+/* ── EMPTY STATE ── */
+.sf-empty{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:72vh;gap:24px;text-align:center;
+}
+.empty-icon{font-size:80px;animation:float 5s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-16px);}}
+.empty-title{
+  font-family:'Fraunces',serif;font-size:52px;font-weight:900;
+  color:var(--ink);
+}
+.empty-title span{color:var(--red);}
+.empty-body{
+  font-family:'DM Sans',sans-serif;font-size:18px;
+  color:var(--ink4);max-width:460px;line-height:1.8;
+}
+.empty-cta{
+  font-family:'Space Mono',monospace;font-size:12px;letter-spacing:3px;font-weight:700;
+  color:var(--blue);background:var(--blue-light);
+  padding:10px 24px;border-radius:8px;border:2px solid var(--blue-mid);
+}
+.empty-quote{
+  font-family:'Fraunces',serif;font-style:italic;font-size:17px;
+  color:var(--ink4);padding:18px 24px;
+  border-left:4px solid var(--gold2);
+  background:var(--gold-light);
+  max-width:440px;line-height:1.8;text-align:left;border-radius:0 8px 8px 0;
+}
+
+/* ── LOADER ── */
+.sf-loader{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:72vh;gap:32px;
+}
+.loader-rings{position:relative;width:80px;height:80px;}
+.lr{position:absolute;inset:0;border-radius:50%;border:3px solid transparent;animation:spin 1.6s linear infinite;}
+.lr1{border-top-color:var(--red);animation-duration:1.2s;}
+.lr2{border-right-color:var(--blue2);inset:10px;animation-duration:1.8s;}
+.lr3{border-bottom-color:var(--green2);inset:20px;animation-duration:2.3s;}
+.lr4{border-left-color:var(--purple2);inset:30px;animation-duration:1.5s;animation-direction:reverse;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loader-quote{
+  font-family:'Fraunces',serif;font-style:italic;font-size:24px;
+  color:var(--ink3);text-align:center;max-width:400px;line-height:1.7;
+}
+.loader-status{
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;font-weight:700;
+  color:var(--blue);background:var(--blue-light);
+  padding:8px 20px;border-radius:8px;border:2px solid var(--blue-mid);
+}
+.loader-bar-wrap{width:280px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.loader-bar{height:100%;background:linear-gradient(90deg,var(--red),var(--purple2),var(--blue2));animation:lbfill 2s ease-in-out infinite;border-radius:3px;}
+@keyframes lbfill{0%{width:0;margin-left:0;}50%{width:100%;margin-left:0;}51%{width:100%;margin-left:0;}100%{width:0;margin-left:100%;}}
+
+/* ═══════════════════════════════════════════════
+   NOVEL OUTPUT
+═══════════════════════════════════════════════ */
+.novel{animation:revealUp .6s ease;}
+@keyframes revealUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* Book cover */
+.book-cover{
+  text-align:center;padding-bottom:56px;margin-bottom:56px;
+  border-bottom:3px solid var(--border);position:relative;
+}
+.book-cover::after{
+  content:'◆';position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
+  background:var(--white);padding:0 20px;
+  color:var(--gold2);font-size:20px;
+}
+.book-eyebrow{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:5px;font-weight:700;
+  color:var(--ink5);margin-bottom:20px;text-transform:uppercase;
+}
+.book-title{
+  font-family:'Fraunces',serif;font-size:clamp(48px,7vw,96px);
+  font-weight:900;line-height:.9;letter-spacing:-2px;
+  color:var(--ink);margin-bottom:16px;
+}
+.book-subtitle{
+  font-family:'Fraunces',serif;font-style:italic;
+  font-size:22px;color:var(--ink4);margin-bottom:28px;
+}
+.book-tags{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+.bt{
+  padding:6px 18px;border-radius:20px;
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;font-weight:700;
+  border:2px solid;
+}
+.bt-red{border-color:var(--red);color:var(--red);background:var(--red-light);}
+.bt-blue{border-color:var(--blue);color:var(--blue);background:var(--blue-light);}
+.bt-gold{border-color:var(--gold);color:var(--gold);background:var(--gold-light);}
+.bt-purple{border-color:var(--purple);color:var(--purple);background:var(--purple-light);}
+
+/* Dramatis Personae */
+.dramatis{
+  margin-bottom:52px;
+  border:3px solid var(--border);background:var(--paper);
+  padding:28px 32px;border-radius:16px;position:relative;
+}
+.dramatis::before{
+  content:'CAST OF CHARACTERS';position:absolute;top:-14px;left:28px;
+  background:var(--white);padding:0 14px;
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;font-weight:700;
+  color:var(--red);border:2px solid var(--border);border-radius:6px;
+}
+.dram-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:8px;}
+.dram-card{
+  padding:14px 18px;border-radius:10px;border-left:4px solid;
+  background:var(--white);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+.dram-card:nth-child(5n+1){border-left-color:var(--gold);}
+.dram-card:nth-child(5n+2){border-left-color:var(--red);}
+.dram-card:nth-child(5n+3){border-left-color:var(--blue);}
+.dram-card:nth-child(5n+4){border-left-color:var(--purple);}
+.dram-card:nth-child(5n){border-left-color:var(--green);}
+.dram-name{font-family:'Fraunces',serif;font-size:20px;font-weight:900;color:var(--ink);margin-bottom:4px;}
+.dram-role{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink5);font-weight:500;}
+
+/* Act headers */
+.act-block{margin:56px 0 32px;}
+.act-header{display:flex;align-items:center;gap:16px;margin-bottom:32px;}
+.act-tag{
+  font-family:'Space Mono',monospace;font-size:12px;letter-spacing:3px;font-weight:700;
+  padding:10px 22px;border-radius:8px;white-space:nowrap;border:2px solid;
+}
+.act-i  .act-tag{border-color:var(--red);   color:var(--red);   background:var(--red-light);}
+.act-ii .act-tag{border-color:var(--blue);  color:var(--blue);  background:var(--blue-light);}
+.act-iii.act-tag,
+.act-iii .act-tag{border-color:var(--purple);color:var(--purple);background:var(--purple-light);}
+.act-name-txt{
+  font-family:'Fraunces',serif;font-style:italic;
+  font-size:24px;color:var(--ink4);flex:1;
+}
+.act-rule{height:2px;background:linear-gradient(90deg,var(--border),transparent);flex:1;}
+
+/* Scene marker */
+.scene-marker{
+  display:flex;align-items:center;gap:16px;margin:32px 0 16px;
+}
+.scene-marker::before,.scene-marker::after{content:'';flex:1;height:2px;background:var(--border);}
+.scene-marker span{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;font-weight:700;
+  color:var(--ink4);white-space:nowrap;
+  background:var(--cream);padding:6px 16px;border:2px solid var(--border);border-radius:6px;
+}
+
+.scene-break{text-align:center;color:var(--gold2);margin:32px 0;font-size:18px;letter-spacing:12px;}
+.orn-div{text-align:center;margin:40px 0;font-size:22px;letter-spacing:14px;color:var(--border2);}
+
+/* Prose */
+.np{
+  font-family:'Fraunces',serif;font-size:19px;
+  line-height:2;color:var(--ink2);margin-bottom:0;
+  text-align:justify;text-indent:2.5em;
+}
+.np:first-of-type,.np.noindent{text-indent:0;}
+
+/* Drop cap */
+.dropcap::first-letter{
+  font-family:'Fraunces',serif;font-size:5em;float:left;
+  line-height:.75;margin-right:10px;margin-top:8px;
+  color:var(--red);font-weight:900;
+}
+
+/* Internal thought */
+.thought-line{
+  font-family:'Fraunces',serif;font-style:italic;
+  font-size:20px;color:var(--ink4);text-align:center;
+  margin:24px 0;padding:18px 28px;
+  background:var(--cream);border-radius:10px;
+  border-left:4px solid var(--gold2);text-align:left;
+}
+
+/* Dialogue */
+.dlg{margin:20px 0;padding:14px 20px;border-left:4px solid;border-radius:0 10px 10px 0;background:var(--paper);}
+.d0{border-color:var(--gold);background:var(--gold-light);}
+.d1{border-color:var(--red);background:var(--red-light);}
+.d2{border-color:var(--blue);background:var(--blue-light);}
+.d3{border-color:var(--purple);background:var(--purple-light);}
+.d4{border-color:var(--green);background:var(--green-light);}
+.dlg-spk{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;font-weight:700;
+  margin-bottom:8px;display:block;
+}
+.d0 .dlg-spk{color:var(--gold);}
+.d1 .dlg-spk{color:var(--red);}
+.d2 .dlg-spk{color:var(--blue);}
+.d3 .dlg-spk{color:var(--purple);}
+.d4 .dlg-spk{color:var(--green);}
+.dlg-txt{
+  font-family:'Fraunces',serif;font-style:italic;
+  font-size:20px;color:var(--ink);line-height:1.7;
+}
+
+/* ═══════════════════════════════════════════════
+   SCENE GALLERY
+═══════════════════════════════════════════════ */
+.gallery{
+  margin-top:64px;padding-top:56px;
+  border-top:3px solid var(--border);position:relative;
+}
+.gallery::before{
+  content:'SCENE GALLERY';
+  position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+  background:var(--white);padding:0 24px;
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:5px;font-weight:700;
+  color:var(--blue);border:2px solid var(--border);border-radius:8px;
+}
+.gallery-meta{
+  text-align:center;margin-bottom:32px;
+  font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink5);
+}
+.gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+@media(max-width:760px){.gallery-grid{grid-template-columns:1fr;}}
+
+.img-card{
+  border:2px solid var(--border);background:var(--paper);
+  overflow:hidden;border-radius:12px;
+  transition:transform .3s,box-shadow .3s,border-color .3s;
+}
+.img-card:hover{transform:translateY(-6px);box-shadow:0 24px 64px var(--shadow2);border-color:var(--blue2);}
+.img-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;}
+
+.img-loading{
+  aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;background:var(--cream);
+}
+.img-load-rings{display:flex;gap:10px;}
+.ilr{width:10px;height:10px;border-radius:50%;border:2px solid var(--blue2);animation:pulse 1.4s ease infinite;}
+.ilr:nth-child(2){animation-delay:.3s;border-color:var(--red);}
+.ilr:nth-child(3){animation-delay:.6s;border-color:var(--purple2);}
+.img-load-txt{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--ink5);}
+
+.img-failed{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:var(--red-light);}
+.img-failed-txt{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--red);text-align:center;padding:24px;line-height:2;}
+
+.img-cap{
+  padding:16px 20px 18px;background:var(--paper);border-top:2px solid var(--border);
+}
+.img-cap-num{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;font-weight:700;color:var(--blue);margin-bottom:6px;}
+.img-cap-desc{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink4);line-height:1.6;}
+
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+.sf-toast{
+  position:fixed;bottom:28px;right:28px;z-index:9999;
+  padding:16px 24px;background:var(--white);
+  border:2px solid var(--red);border-left:5px solid var(--red);
+  color:var(--red);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;
+  transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.2,.8,.4,1);
+  max-width:400px;border-radius:12px;
+  box-shadow:0 16px 48px var(--shadow2);
+}
+.sf-toast.show{transform:translateY(0);opacity:1;}
+.sf-toast.good{border-color:var(--green2);color:var(--green);}
+
+/* Responsive */
+@media(max-width:768px){
+  .sf-header{padding:0 20px;}
+  .hdr-center{display:none;}
+  .sf-hero{padding:40px 20px 36px;}
+  .hero-h1{font-size:52px;}
+  .sf-output{padding:28px 20px;}
+  .char-row{grid-template-columns:36px 1fr 80px auto;}
+}
+</style>
+</head>
+<body>
+
+<div class="sf-app">
+
+  <!-- ═══════════ HEADER ═══════════ -->
+  <header class="sf-header">
+    <div class="hdr-left">
+      <div class="hdr-logo">SCENEFORGE</div>
+      <div class="hdr-sep"></div>
+      <div class="hdr-tagline">CINEMATIC ENGINE v7</div>
+    </div>
+    <nav class="hdr-center">
+      <button class="hdr-nav-btn active" onclick="scrollToPanel()">FORGE STORY</button>
+      <button class="hdr-nav-btn" onclick="scrollToOutput()">READ STORY</button>
+      <button class="hdr-nav-btn" onclick="scrollToGallery()">SCENE GALLERY</button>
+    </nav>
+    <div class="hdr-right">
+      <div class="hdr-badge">
+        <div class="hdr-dot"></div>
+        STUDIO LIVE
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════ STATUS BAR ═══════════ -->
+  <div class="status-bar" id="statusBar">
+    <div class="status-dot"></div>
+    <span id="statusMsg">GENERATING YOUR STORY...</span>
+    <div class="status-track"><div class="status-fill" id="statusFill"></div></div>
+    <span class="status-pct" id="statusPct">0%</span>
+  </div>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="sf-hero">
+    <div class="hero-inner">
+      <div class="hero-kicker">✦ AI-POWERED MULTI-CHARACTER STORY ENGINE</div>
+      <h1 class="hero-h1">
+        FORGE YOUR<br>
+        <span class="word-cinematic">CINEMATIC</span><br>
+        <span class="word-story">STORY</span>
+      </h1>
+      <p class="hero-desc">
+        Build rich characters, craft immersive worlds, and generate stunning scene imagery — all from one powerful creative studio.
+      </p>
+      <div class="hero-chips">
+        <div class="hero-chip hc1">✦ NOVEL FORMAT OUTPUT</div>
+        <div class="hero-chip hc2">◈ AI SCENE IMAGERY</div>
+        <div class="hero-chip hc3">⬡ 15+ STORY CONTROLS</div>
+        <div class="hero-chip hc4">⚙ FULLY CUSTOMIZABLE</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ MAIN GRID ═══════════ -->
+  <div class="sf-main">
+
+    <!-- ═══ LEFT PANEL ═══ -->
+    <div class="sf-panel" id="panelEl">
+
+      <!-- CAST BUILDER -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-red">✒</div>
+          <span class="ps-title">Build Your Cast of Characters</span>
+          <span class="ps-count" id="charCount">2 Characters</span>
+        </div>
+
+        <div class="char-headers">
+          <span>#</span>
+          <span>Character Name</span>
+          <span>Role</span>
+          <span>Gender</span>
+          <span></span>
+        </div>
+
+        <div id="charList"></div>
+        <button class="add-char-btn" onclick="addChar()">+ Add Another Character to the Story</button>
+      </div>
+
+      <div class="pdiv"></div>
+
+      <!-- CHARACTER ARCHETYPES -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-red">⚔</div>
+          <span class="ps-title">Character Archetypes</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">Select personality archetypes that define your characters' nature and motivation.</p>
+        <div class="chip-grid" id="archetypeChips"></div>
+      </div>
+
+      <!-- PRIMARY GENRE -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-gold">📖</div>
+          <span class="ps-title">Primary Genre</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">Choose the main genre that shapes the entire story world.</p>
+        <div class="chip-scroll" id="genreScroll"></div>
+      </div>
+
+      <!-- SUBGENRE -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-purple">✦</div>
+          <span class="ps-title">Subgenre / Style Blend</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">Mix in additional genres to add depth and uniqueness to your story.</p>
+        <div class="chip-grid" id="subgenreChips"></div>
+      </div>
+
+      <div class="pdiv"></div>
+
+      <!-- TONE -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-red">🎭</div>
+          <span class="ps-title">Narrative Tone</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">The emotional mood and atmosphere that runs through your story.</p>
+        <div class="chip-grid" id="toneChips"></div>
+      </div>
+
+      <!-- POV -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-blue">👁</div>
+          <span class="ps-title">Point of View (POV)</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">Who tells the story and from whose perspective we experience it.</p>
+        <div class="chip-grid" id="povChips"></div>
+      </div>
+
+      <!-- NARRATIVE VOICE -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-gold">🖋</div>
+          <span class="ps-title">Narrative Voice & Writing Style</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">How the story is told — the distinctive voice of the narration.</p>
+        <div class="chip-grid" id="voiceChips"></div>
+      </div>
+
+      <div class="pdiv"></div>
+
+      <!-- STORY STRUCTURE -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-purple">📐</div>
+          <span class="ps-title">Story Structure</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">The narrative framework and shape of your story's journey.</p>
+        <div class="chip-grid" id="structureChips"></div>
+      </div>
+
+      <!-- CONFLICT TYPE -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-red">⚡</div>
+          <span class="ps-title">Central Conflict</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">The core struggle that drives your characters forward.</p>
+        <div class="chip-grid" id="conflictChips"></div>
+      </div>
+
+      <!-- PLOT DEVICES -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-gold">🗝</div>
+          <span class="ps-title">Plot Devices & Story Twists</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">Narrative tools and events that make your story unforgettable.</p>
+        <div class="chip-grid" id="plotChips"></div>
+      </div>
+
+      <div class="pdiv"></div>
+
+      <!-- WORLD SETTING -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-blue">🌍</div>
+          <span class="ps-title">World & Setting</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">The environments and locations where your story unfolds.</p>
+        <div class="chip-grid" id="settingChips"></div>
+      </div>
+
+      <!-- TIME PERIOD -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-green">⌛</div>
+          <span class="ps-title">Time Period & Era</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">When your story takes place — from ancient history to far future.</p>
+        <div class="chip-grid" id="periodChips"></div>
+      </div>
+
+      <!-- ATMOSPHERE -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-red">🌘</div>
+          <span class="ps-title">Atmosphere & Visual Mood</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">The visual and sensory feeling of your story's world.</p>
+        <div class="chip-grid" id="atmosphereChips"></div>
+      </div>
+
+      <div class="pdiv"></div>
+
+      <!-- LITERARY DEVICES -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-blue">📜</div>
+          <span class="ps-title">Literary Devices</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">Writing techniques that deepen meaning and emotional impact.</p>
+        <div class="chip-grid" id="literaryChips"></div>
+      </div>
+
+      <!-- ENDING TYPE -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-purple">🔮</div>
+          <span class="ps-title">How the Story Ends</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">The type of resolution and emotional landing for your story.</p>
+        <div class="chip-grid" id="endingChips"></div>
+      </div>
+
+      <!-- PROSE STYLE -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-gold">✨</div>
+          <span class="ps-title">Prose Style Inspired By</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">The literary author whose writing style inspires your prose.</p>
+        <div class="chip-grid" id="proseChips"></div>
+      </div>
+
+      <div class="pdiv"></div>
+
+      <!-- STORY PARAMETERS -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-gold">⚖</div>
+          <span class="ps-title">Story Parameters & Fine-Tuning</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:18px;">Adjust these sliders to control the shape and feel of your generated story.</p>
+
+        <div class="slider-block">
+          <div class="slider-lbl">
+            <span class="slider-name">📏 Story Length</span>
+            <span class="slider-val" id="lenVal">MEDIUM</span>
+          </div>
+          <input type="range" min="1" max="3" value="2" id="lenSlider" oninput="updateLen(this)"/>
+          <p style="font-size:12px;color:var(--ink5);margin-top:4px;">Short = 600 words · Medium = 1100 words · Long = 2000+ words</p>
+        </div>
+
+        <div class="slider-block">
+          <div class="slider-lbl">
+            <span class="slider-name">💬 Dialogue Intensity</span>
+            <span class="slider-val" id="diaVal">50%</span>
+          </div>
+          <input type="range" min="0" max="100" value="50" id="diaSlider" oninput="updateDia(this)"/>
+          <p style="font-size:12px;color:var(--ink5);margin-top:4px;">0% = pure narration · 100% = conversation-heavy story</p>
+        </div>
+
+        <div class="slider-block">
+          <div class="slider-lbl">
+            <span class="slider-name">🔍 Description Depth</span>
+            <span class="slider-val" id="descVal">MODERATE</span>
+          </div>
+          <input type="range" min="1" max="3" value="2" id="descSlider" oninput="updateDesc(this)"/>
+          <p style="font-size:12px;color:var(--ink5);margin-top:4px;">Sparse = fast-paced · Rich = deeply immersive world-building</p>
+        </div>
+
+        <div class="slider-block">
+          <div class="slider-lbl">
+            <span class="slider-name">❤️ Emotional Intensity</span>
+            <span class="slider-val" id="emotVal">60%</span>
+          </div>
+          <input type="range" min="0" max="100" value="60" id="emotSlider" oninput="updateEmot(this)"/>
+          <p style="font-size:12px;color:var(--ink5);margin-top:4px;">0% = calm & understated · 100% = raw, powerful emotion</p>
+        </div>
+      </div>
+
+      <div class="pdiv"></div>
+
+      <!-- DIRECTOR'S VISION -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-red">🎬</div>
+          <span class="ps-title">Director's Special Instructions</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">Write any specific instructions, plot ideas, or requirements you want the story to include.</p>
+        <textarea class="sf-ta" id="directorVision" rows="5" placeholder="Example: End with a tragic sacrifice. The mentor is secretly the villain. Set against a backdrop of civil war. Include a prophecy that comes true in an unexpected way..."></textarea>
+      </div>
+
+      <!-- IMAGE SETTINGS -->
+      <div class="ps">
+        <div class="ps-head">
+          <div class="ps-icon psi-purple">🖼</div>
+          <span class="ps-title">Scene Image Settings</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink5);margin-bottom:10px;">Choose quality for the AI-generated scene illustrations.</p>
+        <select class="sf-sel" id="imgQuality">
+          <option value="high">High Quality (Slower — Best Results)</option>
+          <option value="fast">Fast Generation (Quicker — Good Quality)</option>
+        </select>
+        <p class="tip" style="margin-top:10px;">✦ Images are generated by FLUX.1 via HuggingFace AI</p>
+      </div>
+
+      <!-- FORGE BUTTONS -->
+      <button class="btn-forge" id="forgeBtn" onclick="generateStory()">
+        ◈ FORGE MY STORY NOW
+      </button>
+      <button class="btn-illuminate" id="imgBtn" onclick="generateImages()" disabled>
+        ✦ ILLUMINATE SCENES WITH AI IMAGES
+      </button>
+      <p class="tip" id="imgTip" style="margin-top:10px;">Generate a story first to unlock scene imagery</p>
+
+    </div><!-- end panel -->
+
+    <!-- ═══ RIGHT OUTPUT ═══ -->
+    <div class="sf-output" id="outputEl">
+
+      <!-- EMPTY STATE -->
+      <div class="sf-empty" id="emptyState">
+        <div class="empty-icon">📽️</div>
+        <div class="empty-title">Your <span>Story</span> Awaits</div>
+        <p class="empty-body">
+          Fill in your characters on the left, choose your genre and settings, then press <strong style="color:var(--red)">Forge My Story Now</strong> to generate your cinematic epic.
+        </p>
+        <div class="empty-cta">CRAFT · ILLUMINATE · TRANSCEND</div>
+        <div class="empty-quote">"Every great story is the sum of its characters' choices. Begin yours now."</div>
+      </div>
+
+      <!-- LOADER -->
+      <div class="sf-loader" id="loaderEl" style="display:none">
+        <div class="loader-rings">
+          <div class="lr lr1"></div>
+          <div class="lr lr2"></div>
+          <div class="lr lr3"></div>
+          <div class="lr lr4"></div>
+        </div>
+        <div class="loader-quote" id="loaderQuote">Your story is taking shape...</div>
+        <div class="loader-status" id="loaderStatus">AWAKENING THE NARRATIVE</div>
+        <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+      </div>
+
+      <!-- STORY OUTPUT -->
+      <div id="novelEl" style="display:none"></div>
+
+    </div><!-- end output -->
+  </div><!-- end main grid -->
+</div><!-- end app -->
+
+<!-- TOAST -->
+<div class="sf-toast" id="sfToast"></div>
+
+<script>
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+function showToast(msg, type='error', dur=5000) {
+  const t = document.getElementById('sfToast');
+  t.textContent = (type==='error' ? '⚠ ' : '✓ ') + msg;
+  t.className = 'sf-toast show' + (type==='good' ? ' good' : '');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+/* ══════════════════════════════════════════════
+   SLIDERS
+══════════════════════════════════════════════ */
+const LEN_LABELS  = ['SHORT','MEDIUM','LONG'];
+const DESC_LABELS = ['SPARSE','MODERATE','RICH'];
+function updateLen(el)  { document.getElementById('lenVal').textContent  = LEN_LABELS[el.value-1];  el.style.setProperty('--val',((el.value-1)/2*100)+'%'); }
+function updateDia(el)  { document.getElementById('diaVal').textContent  = el.value+'%';            el.style.setProperty('--val',el.value+'%'); }
+function updateDesc(el) { document.getElementById('descVal').textContent = DESC_LABELS[el.value-1]; el.style.setProperty('--val',((el.value-1)/2*100)+'%'); }
+function updateEmot(el) { document.getElementById('emotVal').textContent = el.value+'%';            el.style.setProperty('--val',el.value+'%'); }
+document.getElementById('lenSlider').style.setProperty('--val','50%');
+document.getElementById('diaSlider').style.setProperty('--val','50%');
+document.getElementById('descSlider').style.setProperty('--val','50%');
+document.getElementById('emotSlider').style.setProperty('--val','60%');
+
+/* ══════════════════════════════════════════════
+   CHARACTERS
+══════════════════════════════════════════════ */
+const CHAR_CLASSES = ['cn0','cn1','cn2','cn3','cn4'];
+const ROLE_OPTIONS = ['Protagonist','Antagonist','Mentor','Trickster','Ally','Rival','Love Interest','Guardian'];
+const GENDER_OPTIONS = ['Male','Female','Non-Binary','Agender','Unknown'];
+
+let chars = [
+  {name:'', role:'Protagonist', gender:'Male'},
+  {name:'', role:'Antagonist',  gender:'Female'}
+];
+
+function renderChars() {
+  const el = document.getElementById('charList');
+  el.innerHTML = '';
+  chars.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'char-row';
+    div.innerHTML = `
+      <div class="char-num ${CHAR_CLASSES[i%5]}">${i+1}</div>
+      <input class="char-in" value="${esc(c.name)}"
+        placeholder="Enter name..."
+        oninput="chars[${i}].name=this.value"/>
+      <select class="char-sel" onchange="chars[${i}].role=this.value">
+        ${ROLE_OPTIONS.map(r=>`<option value="${r}"${c.role===r?' selected':''}>${r}</option>`).join('')}
+      </select>
+      <select class="char-sel" onchange="chars[${i}].gender=this.value">
+        ${GENDER_OPTIONS.map(g=>`<option value="${g}"${c.gender===g?' selected':''}>${g}</option>`).join('')}
+      </select>
+      ${i>1
+        ? `<button class="char-del" onclick="removeChar(${i})" title="Remove character">×</button>`
+        : '<div class="char-spacer"></div>'}
+    `;
+    el.appendChild(div);
+  });
+  document.getElementById('charCount').textContent = chars.length + (chars.length===1?' Character':' Characters');
+}
+
+function addChar() {
+  if (chars.length >= 10) { showToast('Maximum 10 characters allowed.'); return; }
+  chars.push({name:'', role:'Ally', gender:'Male'});
+  renderChars();
+}
+function removeChar(i) { chars.splice(i,1); renderChars(); }
+renderChars();
+
+/* ══════════════════════════════════════════════
+   CHIP DATA
+══════════════════════════════════════════════ */
+const GENRES = [
+  {icon:'⚔️',label:'Action'},{icon:'🧙',label:'Fantasy'},
+  {icon:'🚀',label:'Sci-Fi'},{icon:'👻',label:'Horror'},
+  {icon:'💘',label:'Romance'},{icon:'🔪',label:'Thriller'},
+  {icon:'🎭',label:'Drama'},{icon:'😂',label:'Dark Comedy'},
+  {icon:'🔍',label:'Mystery'},{icon:'🗺️',label:'Adventure'},
+  {icon:'🤖',label:'Cyberpunk'},{icon:'🧬',label:'Dystopia'},
+  {icon:'👁',label:'Psychological'},{icon:'🌹',label:'Gothic'},
+  {icon:'🌌',label:'Space Opera'},{icon:'⚗️',label:'Gaslamp Fantasy'},
+  {icon:'🏮',label:'Historical'},{icon:'🦅',label:'Western'},
+];
+
+const SUBGENRES = [
+  'Sword & Sorcery','Epic Fantasy','Urban Fantasy','Dark Fantasy','Portal Fantasy',
+  'Solarpunk','Biopunk','Steampunk','Dieselpunk','Noblepunk',
+  'Mythological','Isekai','Xianxia','Wuxia','Cultivation',
+  'Noir','Cozy Mystery','Locked Room','Heist','Espionage',
+  'Survival','Post-Collapse','Pirates','Viking','Samurai',
+  'Folklore','Fairy Tale Retelling','Cosmic Horror','Found Family',
+  'Slow Burn Romance','Enemies to Lovers','Sports Drama',
+];
+
+const TONES = [
+  'Dark & Gritty','Epic & Grand','Tender & Melancholic',
+  'Tense & Claustrophobic','Whimsical & Playful','Hopeful & Uplifting',
+  'Tragic & Inevitable','Surreal & Dreamlike','Cold & Clinical',
+  'Warm & Nostalgic','Unhinged & Feverish','Brooding & Atmospheric',
+  'Comedic & Irreverent','Romantic & Yearning','Mythic & Archaic',
+  'Nihilistic & Raw','Poetic & Quiet','Frantic & Kinetic',
+];
+
+const POVS = [
+  'First Person — Intimate','Third Person Limited',
+  'Third Person Omniscient','Second Person — Immersive',
+  'Dual POV','Multiple POV','Epistolary (Letters & Journals)',
+  'Unreliable Narrator',
+];
+
+const VOICES = [
+  'Lyrical & Poetic','Terse & Sharp','Gothic & Ornate',
+  'Stream of Consciousness','Formal & Classical','Colloquial & Raw',
+  'Detached & Observational','Confessional','Philosophical & Reflective',
+  'Wry & Sardonic',
+];
+
+const STRUCTURES = [
+  'Three-Act Classic','Hero\'s Journey','In Medias Res',
+  'Episodic Vignettes','Non-Linear / Fragmented','Framing Narrative',
+  'Tragedy Arc (Hamartia)','Kishōtenketsu','Dual Timeline',
+  'Reverse Chronology',
+];
+
+const CONFLICTS = [
+  'Self vs. Self (Internal)','Character vs. Character',
+  'Character vs. Society','Character vs. Nature',
+  'Character vs. Fate','Character vs. Supernatural',
+  'Character vs. Technology','Character vs. Ideology',
+  'Character vs. Time',
+];
+
+const PLOT_DEVICES = [
+  'Betrayal','Forbidden Love','Secret Identity','Ancient Prophecy',
+  'Redemption Arc','Love Triangle','Tragic Misunderstanding',
+  'Mentor\'s Sacrifice','Dark Bargain','Cursed Bloodline',
+  'Lost Heir','Unlikely Alliance','Revenge Quest','Final Test',
+  'Memory Loss / Amnesia','Time Loop','Chosen One Subverted',
+  'Found Family','Race Against Time','The MacGuffin',
+  'Unreliable Ally','Hidden Villain',
+];
+
+const SETTINGS = [
+  'Medieval Kingdom','Ancient Empire','Floating Sky Cities',
+  'Underwater World','Post-Apocalyptic Wasteland','Enchanted Forest',
+  'Underground Realm','Deep Space Station','Frozen Arctic',
+  'Desert Sultanate','Volcanic Archipelago','Mirror Dimension',
+  'Celestial Plane','Haunted Manor','Megacity Slums',
+  'Island Nation','Mountain Citadel','Ruined Battlefield',
+  'Dense Jungle','Vast Ocean','Cursed Village','The Between',
+];
+
+const PERIODS = [
+  'Ancient (3000 BC – 500 AD)','Medieval (500–1500)',
+  'Renaissance (1400–1600)','Age of Sail (1600–1800)',
+  'Victorian Era (1837–1901)','Edwardian (1901–1914)',
+  'Interwar (1920s–30s)','Post-WWII (1945–1960)',
+  'Cold War Era (1947–1991)','Near Future (2050s)',
+  'Far Future (2200+)','Timeless / Mythic','Cyclical / Eternal',
+  'Prehistoric','Alternate History',
+];
+
+const ATMOSPHERES = [
+  'Candlelit & Intimate','Storm-Drenched & Violent',
+  'Eternal Twilight','Neon-Soaked Night',
+  'Golden Afternoon Haze','Misty & Ethereal',
+  'Blood-Red Dawn','Ash & Ember','Crystal & Snow',
+  'Overgrown & Verdant','Parched & Sun-Bleached',
+  'Deep-Sea Abyssal','Star-Filled Void',
+  'Thunder & Lightning','Fog-Choked Streets','Desert Mirage',
+];
+
+const LITERARY = [
+  'Foreshadowing','Unreliable Memory','Flashbacks & Memories',
+  'Dreams & Visions','Symbolism & Motifs','Dramatic Irony',
+  'Parallel Storylines','Leitmotif','Pathetic Fallacy',
+  'Chekhov\'s Gun','Frame Narrative','Allegory',
+  'Dark Humor as Relief','Character Foils','Epistolary Inserts',
+  'Non-Linear Revelation','Red Herring',
+];
+
+const ENDINGS = [
+  'Triumphant Resolution','Pyrrhic Victory','Bittersweet Farewell',
+  'Open-Ended Ambiguity','Tragic Downfall','Shocking Twist',
+  'Cyclical — Back to Beginning','Sacrifice & Legacy',
+  'Redemption Achieved','Existential Acceptance','Cliffhanger',
+  'Hopeful New Beginning','Everything Was Lost',
+];
+
+const PROSE_STYLES = [
+  'Hemingway — Sparse & Direct','Nabokov — Lush & Playful',
+  'Cormac McCarthy — Stark & Bleak','García Márquez — Magical Realism',
+  'Murakami — Surreal & Quiet','Jane Austen — Witty & Precise',
+  'Dostoevsky — Philosophical','N.K. Jemisin — Experimental',
+  'Tolkien — Mythic & Detailed','Le Guin — Philosophical & Lyrical',
+  'Stephen King — Grounded Horror','Ursula K. Le Guin — World-Building',
+];
+
+const ARCHETYPES = [
+  'The Hero','The Antihero','The Mentor','The Trickster','The Shadow',
+  'The Innocent','The Sage','The Explorer','The Ruler','The Caregiver',
+  'The Outlaw','The Creator','The Lover','The Jester','The Everyman',
+  'The Shapeshifter','The Threshold Guardian','The Herald',
+];
+
+/* ══════════════════════════════════════════════
+   CHIP STATE
+══════════════════════════════════════════════ */
+let selGenre      = 'Fantasy';
+let selSubgenres  = new Set();
+let selTones      = new Set(['Epic & Grand']);
+let selPOV        = 'Third Person Limited';
+let selVoice      = 'Lyrical & Poetic';
+let selStructure  = 'Three-Act Classic';
+let selConflicts  = new Set(['Character vs. Character']);
+let selPlot       = new Set();
+let selSettings   = new Set();
+let selPeriod     = 'Timeless / Mythic';
+let selAtmospheres= new Set();
+let selLiterary   = new Set();
+let selEnding     = 'Bittersweet Farewell';
+let selProse      = 'Nabokov — Lush & Playful';
+let selArchetypes = new Set();
+
+const CHIP_SEL = ['sa','sb','sc','sd','se'];
+function chipSelClass(label) {
+  let h=0; for(const c of label) h=((h*31)+c.charCodeAt(0))&0xffff;
+  return CHIP_SEL[h%CHIP_SEL.length];
+}
+
+function renderGenres() {
+  document.getElementById('genreScroll').innerHTML = GENRES.map(g=>`
+    <div class="genre-card${g.label===selGenre?' gsel':''}" onclick="pickGenre('${g.label}')">
+      <span class="gc-icon">${g.icon}</span>${g.label}
+    </div>`).join('');
+}
+function renderSingle(data,val,elId,fn) {
+  document.getElementById(elId).innerHTML = data.map(d=>`
+    <div class="chip${val===d?' sa':''}" onclick="${fn}('${d.replace(/'/g,"\\'")}')">${d}</div>`).join('');
+}
+function renderMulti(data,set,elId,fn) {
+  document.getElementById(elId).innerHTML = data.map(d=>`
+    <div class="chip${set.has(d)?' '+chipSelClass(d):''}" onclick="${fn}('${d.replace(/'/g,"\\'")}')">${d}</div>`).join('');
+}
+
+function pickGenre(v)     { selGenre=v;     renderGenres(); }
+function pickPOV(v)       { selPOV=v;       renderSingle(POVS,selPOV,'povChips','pickPOV'); }
+function pickVoice(v)     { selVoice=v;     renderSingle(VOICES,selVoice,'voiceChips','pickVoice'); }
+function pickStructure(v) { selStructure=v; renderSingle(STRUCTURES,selStructure,'structureChips','pickStructure'); }
+function pickPeriod(v)    { selPeriod=v;    renderSingle(PERIODS,selPeriod,'periodChips','pickPeriod'); }
+function pickEnding(v)    { selEnding=v;    renderSingle(ENDINGS,selEnding,'endingChips','pickEnding'); }
+function pickProse(v)     { selProse=v;     renderSingle(PROSE_STYLES,selProse,'proseChips','pickProse'); }
+
+function toggleTone(v)       { selTones.has(v)?selTones.delete(v):selTones.add(v);             renderMulti(TONES,selTones,'toneChips','toggleTone'); }
+function toggleSubgenre(v)   { selSubgenres.has(v)?selSubgenres.delete(v):selSubgenres.add(v); renderMulti(SUBGENRES,selSubgenres,'subgenreChips','toggleSubgenre'); }
+function toggleConflict(v)   { selConflicts.has(v)?selConflicts.delete(v):selConflicts.add(v); renderMulti(CONFLICTS,selConflicts,'conflictChips','toggleConflict'); }
+function togglePlot(v)       { selPlot.has(v)?selPlot.delete(v):selPlot.add(v);               renderMulti(PLOT_DEVICES,selPlot,'plotChips','togglePlot'); }
+function toggleSetting(v)    { selSettings.has(v)?selSettings.delete(v):selSettings.add(v);   renderMulti(SETTINGS,selSettings,'settingChips','toggleSetting'); }
+function toggleAtmosphere(v) { selAtmospheres.has(v)?selAtmospheres.delete(v):selAtmospheres.add(v); renderMulti(ATMOSPHERES,selAtmospheres,'atmosphereChips','toggleAtmosphere'); }
+function toggleLiterary(v)   { selLiterary.has(v)?selLiterary.delete(v):selLiterary.add(v);   renderMulti(LITERARY,selLiterary,'literaryChips','toggleLiterary'); }
+function toggleArchetype(v)  { selArchetypes.has(v)?selArchetypes.delete(v):selArchetypes.add(v); renderMulti(ARCHETYPES,selArchetypes,'archetypeChips','toggleArchetype'); }
+
+renderGenres();
+renderMulti(ARCHETYPES,selArchetypes,'archetypeChips','toggleArchetype');
+renderMulti(SUBGENRES,selSubgenres,'subgenreChips','toggleSubgenre');
+renderMulti(TONES,selTones,'toneChips','toggleTone');
+renderSingle(POVS,selPOV,'povChips','pickPOV');
+renderSingle(VOICES,selVoice,'voiceChips','pickVoice');
+renderSingle(STRUCTURES,selStructure,'structureChips','pickStructure');
+renderMulti(CONFLICTS,selConflicts,'conflictChips','toggleConflict');
+renderMulti(PLOT_DEVICES,selPlot,'plotChips','togglePlot');
+renderMulti(SETTINGS,selSettings,'settingChips','toggleSetting');
+renderSingle(PERIODS,selPeriod,'periodChips','pickPeriod');
+renderMulti(ATMOSPHERES,selAtmospheres,'atmosphereChips','toggleAtmosphere');
+renderMulti(LITERARY,selLiterary,'literaryChips','toggleLiterary');
+renderSingle(ENDINGS,selEnding,'endingChips','pickEnding');
+renderSingle(PROSE_STYLES,selProse,'proseChips','pickProse');
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+const BACKEND = 'http://localhost:8000';
+let storyScenes = [];
+let currentGenre = 'Fantasy';
+let currentTone  = 'Epic';
+let currentAtm   = '';
+
+/* ══════════════════════════════════════════════
+   LOADER
+══════════════════════════════════════════════ */
+const LOADER_MSGS = [
+  ['Your story is beginning to take shape...','AWAKENING THE NARRATIVE'],
+  ['Characters are drawing their first breath...','BUILDING YOUR CAST'],
+  ['Worlds are unfolding across ancient maps...','CRAFTING THE WORLD'],
+  ['Voices are speaking from the silence...','WRITING THE DIALOGUE'],
+  ['Fate is weaving its invisible threads...','TYING THE STRANDS TOGETHER'],
+  ['The final words are being written...','SEALING YOUR STORY'],
+];
+let loaderIdx=0, loaderTimer=null;
+function startLoader() {
+  loaderIdx=0; updateLoaderMsg();
+  loaderTimer=setInterval(()=>{ loaderIdx=(loaderIdx+1)%LOADER_MSGS.length; updateLoaderMsg(); },2800);
+}
+function updateLoaderMsg() {
+  const [q,s]=LOADER_MSGS[loaderIdx];
+  document.getElementById('loaderQuote').textContent=q;
+  document.getElementById('loaderStatus').textContent=s;
+}
+function stopLoader() { clearInterval(loaderTimer); }
+
+/* ══════════════════════════════════════════════
+   STATUS BAR
+══════════════════════════════════════════════ */
+function setStatus(msg,pct) {
+  document.getElementById('statusBar').classList.add('visible');
+  document.getElementById('statusMsg').textContent=msg;
+  document.getElementById('statusFill').style.width=pct+'%';
+  document.getElementById('statusPct').textContent=pct+'%';
+}
+function clearStatus() { document.getElementById('statusBar').classList.remove('visible'); }
+
+/* ══════════════════════════════════════════════
+   GENERATE STORY
+══════════════════════════════════════════════ */
+async function generateStory() {
+  const filled = chars.filter(c=>c.name.trim());
+  if (filled.length < 2) { showToast('Please enter at least 2 character names.'); return; }
+
+  storyScenes=[];
+  currentGenre=selGenre;
+  currentTone=[...selTones].slice(0,2).join(', ')||'Epic';
+  currentAtm=[...selAtmospheres].slice(0,2).join(', ');
+
+  document.getElementById('forgeBtn').disabled=true;
+  document.getElementById('imgBtn').disabled=true;
+  document.getElementById('imgTip').textContent='Generating your story...';
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('novelEl').style.display='none';
+  document.getElementById('loaderEl').style.display='flex';
+  setStatus('GENERATING YOUR STORY',10);
+  startLoader();
+
+  const payload = {
+    characters: filled.map(c=>c.name.trim()),
+    genre:               selGenre,
+    subgenres:           [...selSubgenres].join(', '),
+    tone:                [...selTones].slice(0,3).join(', ')||'Epic',
+    story_length:        document.getElementById('lenVal').textContent,
+    dialogue_intensity:  parseInt(document.getElementById('diaSlider').value),
+    description_depth:   document.getElementById('descVal').textContent,
+    emotional_intensity: parseInt(document.getElementById('emotSlider').value),
+    pov:                 selPOV,
+    voice:               selVoice,
+    structure:           selStructure,
+    conflicts:           [...selConflicts].join(', '),
+    plot_devices:        [...selPlot].join(', '),
+    world_settings:      [...selSettings],
+    time_period:         selPeriod,
+    atmospheres:         [...selAtmospheres].join(', '),
+    literary_devices:    [...selLiterary].join(', '),
+    ending:              selEnding,
+    prose_style:         selProse,
+    archetypes:          [...selArchetypes].join(', '),
+    custom_instructions: document.getElementById('directorVision').value.trim()
+  };
+
+  try {
+    setStatus('CALLING STORY ENGINE',20);
+    const res = await fetch(`${BACKEND}/generate-story`,{
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)
+    });
+    setStatus('PROCESSING RESPONSE',70);
+    if (!res.ok) { const err=await res.json().catch(()=>({})); throw new Error(err.detail||'Server error '+res.status); }
+    const data = await res.json();
+    storyScenes = Array.isArray(data.scenes)&&data.scenes.length>0
+      ? data.scenes : fallbackExtractScenes(data.story);
+    setStatus('RENDERING YOUR STORY',90);
+    stopLoader();
+    document.getElementById('loaderEl').style.display='none';
+    document.getElementById('novelEl').style.display='block';
+    renderNovel(data,filled);
+    setStatus('COMPLETE',100);
+    if (storyScenes.length>0) {
+      document.getElementById('imgBtn').disabled=false;
+      document.getElementById('imgTip').textContent=`✦ ${storyScenes.length} scenes ready — click to generate images`;
+    }
+    document.getElementById('outputEl').scrollTo({top:0,behavior:'smooth'});
+    setTimeout(clearStatus,2000);
+  } catch(e) {
+    stopLoader();clearStatus();
+    document.getElementById('loaderEl').style.display='none';
+    document.getElementById('emptyState').style.display='flex';
+    showToast('Story generation failed: '+e.message,'error',8000);
+    console.error('Story error:',e);
+  } finally {
+    document.getElementById('forgeBtn').disabled=false;
+  }
+}
+
+function fallbackExtractScenes(text) {
+  if (!text) return [];
+  const scenes=[];
+  const matches=[...text.matchAll(/SCENE_\d+:\s*(.+)/g)];
+  matches.forEach(m=>scenes.push(m[1].trim()));
+  if (!scenes.length) {
+    text.split('\n').forEach(line=>{ const l=line.trim(); if(l.startsWith('EXT.')||l.startsWith('INT.')) scenes.push(l); });
+  }
+  if (!scenes.length) {
+    const chunks=text.split('\n\n').filter(p=>p.trim().length>80);
+    chunks.slice(0,4).forEach(c=>scenes.push(c.trim().substring(0,300)));
+  }
+  return scenes.slice(0,4);
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ══════════════════════════════════════════════
+   RENDER NOVEL
+══════════════════════════════════════════════ */
+let speakerColorMap={};
+function getSpeakerClass(name) {
+  const key=name.toUpperCase().trim();
+  if(speakerColorMap[key]===undefined) speakerColorMap[key]=Object.keys(speakerColorMap).length%5;
+  return 'd'+speakerColorMap[key];
+}
+
+function renderNovel(data,charObjs) {
+  speakerColorMap={};
+  const out=document.getElementById('novelEl');
+  const title=data.title||'Untitled';
+  const sub=data.subtitle||'';
+  const body=data.story||'';
+  const lines=body.split('\n');
+
+  const roleMap={};
+  lines.forEach(l=>{ const m=l.trim().match(/^-\s*([^:]+):\s*([^—–\-]+)[—–\-]\s*(.+)/); if(m) roleMap[m[1].trim()]={role:m[2].trim(),desc:m[3].trim()}; });
+
+  let html='<div class="novel">';
+
+  // Book cover
+  html+=`<div class="book-cover">
+    <div class="book-eyebrow">A SCENEFORGE CINEMATIC STORY</div>
+    <div class="book-title">${esc(title)}</div>
+    ${sub?`<div class="book-subtitle">${esc(sub)}</div>`:''}
+    <div class="book-tags">
+      <span class="bt bt-red">${esc(selGenre)}</span>
+      ${[...selTones].slice(0,2).map(t=>`<span class="bt bt-blue">${esc(t)}</span>`).join('')}
+      ${selPOV?`<span class="bt bt-gold">${esc(selPOV)}</span>`:''}
+      ${selEnding?`<span class="bt bt-purple">${esc(selEnding)}</span>`:''}
+    </div>
+  </div>`;
+
+  // Dramatis personae
+  if (charObjs.length>0) {
+    html+='<div class="dramatis"><div class="dram-grid">';
+    charObjs.forEach((c,i)=>{
+      const rKey=Object.keys(roleMap).find(k=>k.toLowerCase().includes(c.name.toLowerCase().split(' ')[0]));
+      const role=rKey?roleMap[rKey].role:c.role;
+      html+=`<div class="dram-card">
+        <div class="dram-name">${esc(c.name)}</div>
+        <div class="dram-role">${esc(role)} · ${esc(c.gender||'')}</div>
+      </div>`;
+    });
+    html+='</div></div>';
+  }
+
+  // Parse body
+  let inRoles=false, actOpen=false, sectionParaIdx=0;
+  const SKIP_PREFIXES=/^(TITLE|SUBTITLE|SCENE_|GENRE|CHARACTER ROLES|SCENE_DESCRIPTIONS)/i;
+  const DIALOG_SKIP=/^(TITLE|GENRE|SCENE|ACT|CHARACTER|EXT|INT|SETTING|VISUAL|SUBTITLE|THEMES?|AUTHOR|SCENE_):/i;
+
+  for (let i=0;i<lines.length;i++) {
+    const raw=lines[i];
+    const line=raw.trim();
+    if(!line) continue;
+    if(SKIP_PREFIXES.test(line)) continue;
+    if(/CHARACTER ROLES/i.test(line)){inRoles=true;continue;}
+    if(inRoles){if(/^---+$/.test(line))inRoles=false;continue;}
+    if(/^SCENE_DESCRIPTIONS/i.test(line)) break;
+    if(/^---+$/.test(line)){html+='<div class="orn-div">· · ·</div>';continue;}
+    if(/^~~~+$/.test(line)){html+='<div class="scene-break">✦ &nbsp; ✦ &nbsp; ✦</div>';sectionParaIdx=0;continue;}
+
+    const actMatch=line.match(/(?:---\s*)?ACT\s*(I{1,3}|ONE|TWO|THREE|1|2|3)(?:\s*[-—–]+\s*(.+))?/i);
+    if(actMatch){
+      const num=actMatch[1].toUpperCase();
+      const name=actMatch[2]?actMatch[2].trim():'';
+      const rn=['ONE','1','I'].some(x=>num===x)?'i':(['TWO','2','II'].some(x=>num===x)?'ii':'iii');
+      const rnum=rn==='i'?'ACT I':rn==='ii'?'ACT II':'ACT III';
+      const def=rn==='i'?'The Beginning':rn==='ii'?'The Confrontation':'The Resolution';
+      if(actOpen)html+='</div>';
+      html+=`<div class="act-block act-${rn}"><div class="act-header">
+        <div class="act-tag">${rnum}</div>
+        <div class="act-name-txt">${esc(name||def)}</div>
+        <div class="act-rule"></div>
+      </div>`;
+      actOpen=true;sectionParaIdx=0;continue;
+    }
+
+    if(/^(EXT\.|INT\.)/i.test(line)){
+      html+=`<div class="scene-marker"><span>${esc(line.replace(/^(EXT\.|INT\.)\s*/i,'').trim().toUpperCase())}</span></div>`;
+      continue;
+    }
+
+    const sceneTagMatch=line.match(/>>>\s*SCENE:\s*(.+?)\s*<<</i);
+    if(sceneTagMatch){html+=`<div class="scene-marker"><span>${esc(sceneTagMatch[1].toUpperCase())}</span></div>`;continue;}
+
+    const thoughtMatch=line.match(/^\*(.+)\*$/);
+    if(thoughtMatch){html+=`<div class="thought-line">${esc(thoughtMatch[1])}</div>`;continue;}
+
+    if(/^\*\*.+\*\*$/.test(line)){html+=`<div class="scene-marker"><span>${esc(line.replace(/\*\*/g,'').toUpperCase())}</span></div>`;continue;}
+
+    const dlgMatch=line.match(/^([A-Z][A-Z\s''\.]{1,30}):\s(.+)/);
+    if(dlgMatch&&!DIALOG_SKIP.test(line)){
+      const cls=getSpeakerClass(dlgMatch[1]);
+      html+=`<div class="dlg ${cls}"><span class="dlg-spk">${esc(dlgMatch[1])}</span><div class="dlg-txt">"${esc(dlgMatch[2])}"</div></div>`;
+      continue;
+    }
+
+    if(line.length>3){
+      const isFirst=sectionParaIdx===0;
+      html+=`<p class="np${isFirst?' dropcap':''}">${esc(line)}</p>`;
+      sectionParaIdx++;
+    }
+  }
+
+  if(actOpen)html+='</div>';
+  html+='</div>';
+  html+='<div id="galleryEl"></div>';
+  out.innerHTML=html;
+}
+
+/* ══════════════════════════════════════════════
+   GENERATE SCENE IMAGES
+══════════════════════════════════════════════ */
+async function generateImages() {
+  if(!storyScenes||storyScenes.length===0){showToast('Please forge a story first — no scenes found.');return;}
+  document.getElementById('imgBtn').disabled=true;
+  document.getElementById('imgTip').textContent='Illuminating your scenes with AI...';
+  setStatus('GENERATING SCENE IMAGES',5);
+
+  const gallery=document.getElementById('galleryEl');
+  if(!gallery){showToast('Story output not found — please forge a story first.');document.getElementById('imgBtn').disabled=false;return;}
+
+  gallery.innerHTML=`
+    <div class="gallery">
+      <div class="gallery-meta">
+        ${storyScenes.length} cinematic scene${storyScenes.length>1?'s':''} — Generated by FLUX.1 · HuggingFace AI
+      </div>
+      <div class="gallery-grid" id="imgGrid">
+        ${storyScenes.map((_,i)=>`
+          <div class="img-card" id="sc${i}">
+            <div class="img-loading">
+              <div class="img-load-rings">
+                <div class="ilr"></div><div class="ilr"></div><div class="ilr"></div>
+              </div>
+              <div class="img-load-txt">GENERATING SCENE ${i+1}...</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  gallery.scrollIntoView({behavior:'smooth',block:'start'});
+
+  try {
+    setStatus('CALLING IMAGE ENGINE',20);
+    const res=await fetch(`${BACKEND}/generate-images`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({scenes:storyScenes,genre:currentGenre,tone:currentTone,atmospheres:currentAtm})
+    });
+    setStatus('PROCESSING IMAGES',60);
+    if(!res.ok){const err=await res.json().catch(()=>({}));throw new Error(err.detail||'Image server error '+res.status);}
+    const data=await res.json();
+    let successCount=0;
+
+    data.images.forEach((img,i)=>{
+      const card=document.getElementById('sc'+i);
+      if(!card)return;
+      if(img.url){
+        successCount++;
+        card.innerHTML=`
+          <img src="${img.url}" alt="Scene ${i+1}" loading="lazy"
+            onerror="this.parentElement.innerHTML='<div class=\\'img-failed\\'><div class=\\'img-failed-txt\\'>Scene image could not be displayed</div></div><div class=\\'img-cap\\'><div class=\\'img-cap-num\\'>SCENE ${i+1}</div><div class=\\'img-cap-desc\\'>${esc(storyScenes[i].substring(0,100))}...</div></div>'"/>
+          <div class="img-cap">
+            <div class="img-cap-num">SCENE ${i+1} OF ${data.images.length}</div>
+            <div class="img-cap-desc">${esc((img.scene||storyScenes[i]).substring(0,130))}...</div>
+          </div>`;
+      } else {
+        card.innerHTML=`
+          <div class="img-failed"><div class="img-failed-txt">
+            Scene ${i+1} — Image generation failed<br>
+            <small>${esc((img.error||'Unknown error').substring(0,60))}</small>
+          </div></div>
+          <div class="img-cap">
+            <div class="img-cap-num">SCENE ${i+1}</div>
+            <div class="img-cap-desc">${esc(storyScenes[i].substring(0,100))}...</div>
+          </div>`;
+      }
+    });
+
+    setStatus('COMPLETE',100);
+    setTimeout(clearStatus,2000);
+    showToast(`${successCount} of ${data.images.length} scenes illuminated successfully.`,successCount>0?'good':'error');
+  } catch(e) {
+    clearStatus();
+    showToast('Image generation failed: '+e.message,'error',8000);
+    console.error('Image error:',e);
+  } finally {
+    document.getElementById('imgBtn').disabled=false;
+    document.getElementById('imgTip').textContent=`✦ ${storyScenes.length} scenes — click to regenerate images`;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   NAV HELPERS
+══════════════════════════════════════════════ */
+function scrollToPanel()  { document.getElementById('panelEl').scrollIntoView({behavior:'smooth'}); }
+function scrollToOutput() { document.getElementById('outputEl').scrollTo({top:0,behavior:'smooth'}); }
+function scrollToGallery(){ const g=document.getElementById('galleryEl'); if(g)g.scrollIntoView({behavior:'smooth'}); }
+</script>
+</body>
+</html>

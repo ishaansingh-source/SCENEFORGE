@@ -1,0 +1,2 @@
+PS C:\Users\Ishaan\Desktop\storymaker> python -m http.server 5500
+PS C:\Users\Ishaan\Desktop\storymaker> uvicorn main:app --reload 
